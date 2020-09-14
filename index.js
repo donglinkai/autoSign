@@ -1,9 +1,10 @@
 const qs = require('querystring');
 const schedule = require('node-schedule');
 const fetch = require('node-fetch');
+const config = require('./account.json')
 // 跑路云签到页面
-const email = '704826318@qq.com';
-const passwd = '704826318';
+const email = config.email;
+const passwd = config.pwd;
 
 const onSign = async () => {
     try {
@@ -56,7 +57,7 @@ const checkin = async (cfduid, key, uid, ip, expire_in) => {
     } else {
         // abnormal
     }
-    console.log(JSON.stringify(res));
+    console.log(JSON.stringify(res), '-', new Date().toString());
 };
 
 function getCookie(str, cookie) {
@@ -64,7 +65,10 @@ function getCookie(str, cookie) {
 }
 
 var rule1 = new schedule.RecurrenceRule();
-rule1.hour = [6];
+rule1.hour = 9;
+rule1.minute = 0;
+rule1.dayOfWeek = [new schedule.Range(0, 6)];
+console.log('自动签到已启动..');
 schedule.scheduleJob(rule1, function(){
   onSign();
 });
